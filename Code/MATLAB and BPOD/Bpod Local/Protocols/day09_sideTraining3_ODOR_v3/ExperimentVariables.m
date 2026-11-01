@@ -22,11 +22,11 @@ classdef ExperimentVariables
         
         %% Dry Licks
         DRY_LICKS_PRESTIM = 3; % number of licks to be completed before stimulus delivery (for 3 licks)
-        DRY_LICKS_POSTSTIM = 7; % number of licks to be completed after the 3 stimulus deliveries
+        DRY_LICKS_POSTSTIM = 8; % number of licks to be completed after the 3 stimulus deliveries
 
         %% Volumes
         STIM_VOLUME = 5; % stimulus in ul delivered per lick (3 licks for center, 4 licks for lateral)
-        LOAD_VOLUME = 200; % at least 1x dead space of the manifold. Fills the manifold and pushes the first amount to waste.
+        LOAD_VOLUME = 120; % at least 1x dead space of the manifold. Fills the manifold and pushes the first amount to waste.
 
         %% Valves
         LEFT_VALVE = 1; % left port valve

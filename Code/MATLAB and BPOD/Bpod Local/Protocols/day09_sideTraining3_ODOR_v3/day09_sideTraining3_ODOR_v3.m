@@ -51,9 +51,9 @@ function day09_sideTraining3_ODOR_v3
     % Generating trial order (determines the stimulus and vale for each trial)
     % FOR SIDE TRAINING: this is only used to shuffle the order of stimulus loading valves. 
     if expV.SIDE_TRAINING_STIMULUS == 1 % 1 for water
-        [center_stim_valve_order, ~] = GenerateTrialOrder_SideAndAlternationTraining();
+        [center_stim_valve_order, ~, ~] = GenerateTrialOrder_SideAndAlternationTraining();
     elseif expV.SIDE_TRAINING_STIMULUS == 2 % 2 for odor
-        [~, center_stim_valve_order] = GenerateTrialOrder_SideAndAlternationTraining(); 
+        [~, center_stim_valve_order, ~] = GenerateTrialOrder_SideAndAlternationTraining(); 
     end
 
     %% LOAD and UPDATE ProtocolSettings and Get Valve Timings

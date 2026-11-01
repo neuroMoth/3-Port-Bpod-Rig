@@ -6,7 +6,7 @@
 % An array with the order for each trial type is returned. This script can be used with unequal numbers of valves per
 % trial/stimulus type. 
 
-function [valveOrder1, valveOrder2] = GenerateTrialOrder_SideAndAlternationTraining()
+function [valveOrder1, valveOrder2, firstTrial] = GenerateTrialOrder_SideAndAlternationTraining()
     %% --- Initialize random number generator ---
     rng("shuffle"); % Creates a new seed for each time to ensure independent values
 
@@ -25,6 +25,9 @@ function [valveOrder1, valveOrder2] = GenerateTrialOrder_SideAndAlternationTrain
     % Set threshold for valve repeats on the same side
     if n_v1 == 1; maxV1Rep = inf; else; maxV1Rep = maxRepeats; end
     if n_v2 == 1; maxV2Rep = inf; else; maxV2Rep = maxRepeats; end
+    
+    %% For Alternation only, randomize first trial type: 
+    firstTrial = randi(2) - 1; 
 
     %% Shuffle center valves for each trial type ---
     valveOrder1 = []; valveOrder2 = [];
