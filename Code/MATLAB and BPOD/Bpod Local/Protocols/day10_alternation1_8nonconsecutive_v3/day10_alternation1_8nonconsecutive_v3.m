@@ -219,7 +219,7 @@ function day10_alternation1_8nonconsecutive_v3
 
         % If stimuli switched (or first trial), print new lateral ports and reset flag
         if (BpodSystem.Status.switchStimulusFlag) || trial == 1
-            fprintf('%s. Correct=port%d. \n', trialType, correct_port.PORT);
+            fprintf('%s. Correct=port%d. ', trialType, correct_port.PORT);
             BpodSystem.Status.switchStimulusFlag = false; % reset the flag
             BpodSystem.Status.numberNonconsecutiveCorrect = 0; 
         end
@@ -379,7 +379,7 @@ function day10_alternation1_8nonconsecutive_v3
         sma = AddState(sma, 'Name', 'closeCenterValve3', ...
             'Timer', 0, ...
             'StateChangeConditions', {center_port.COUNTER_EVENT_2, 'Delay', ...
-            expV.LICK_WINDOW_TIMER_END, 'reportSkip'}, ...
+            expV.LICK_WINDOW_TIMER_END, 'Delay'}, ...
             'OutputActions', {center_port.DOOR, expV.DOWN, 'ValveModule1', ['C' center_port.VALVE]});
 
         %%%%% LATERAL PORT: RESPONSE PHASE %%%%%
