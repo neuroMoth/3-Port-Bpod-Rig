@@ -104,10 +104,10 @@ function day11_alternation2_6nonconsecutive_v3
 
     % Get valve times for priming, loading, and rinse
     % Make sure the values allow for full ITI
-    valvePrimingTime = round(mean(GetValveTimes(expV.PRIMING_VOLUME, centerStimValves)), 3);
+    %valvePrimingTime = round(mean(GetValveTimes(expV.PRIMING_VOLUME, centerStimValves)), 3);
     valveLoadingTime = round(mean(GetValveTimes(expV.LOAD_VOLUME, centerStimValves)), 3);
     valveRinseTime = round(GetValveTimes(expV.RINSE_VOLUME, expV.RINSE_VALVE), 3);
-    if (expV.ITI_TIME - expV.ITI_ENDTIME) < (valvePrimingTime + valveLoadingTime + (2*valveRinseTime) + (4*expV.GAS_TIME) + 1)
+    if (expV.ITI_TIME - expV.ITI_ENDTIME) < (valveLoadingTime + (2*valveRinseTime) + (3*expV.GAS_TIME) + 1)
         error('Error: calibration values for rinse and preloading are incompatible with this protocol. ');
     end
 
@@ -168,7 +168,7 @@ function day11_alternation2_6nonconsecutive_v3
     for iValves = 1:length(valveID)
         fprintf('%s=%.1fms. ', valveID(iValves), valveStimTimes(iValves) * 1000);
     end
-    fprintf(['\nPriming: ' num2str(expV.PRIMING_VOLUME) 'ul, ' num2str(valvePrimingTime) 's. ']);
+    %fprintf(['\nPriming: ' num2str(expV.PRIMING_VOLUME) 'ul, ' num2str(valvePrimingTime) 's. ']);
     fprintf(['Load: ' num2str(expV.LOAD_VOLUME) 'ul, ' num2str(valveLoadingTime) 's. ']);
     fprintf(['Rinse: ' num2str(expV.RINSE_VOLUME) 'ul, ' num2str(valveRinseTime) 's per pulse (x2 pulses). \n']);
 
@@ -223,8 +223,10 @@ function day11_alternation2_6nonconsecutive_v3
             BpodSystem.Status.switchStimulusFlag = false; % reset the flag
             BpodSystem.Status.numberNonconsecutiveCorrect = 0; 
         end
+        fprintf('Center=valve%d. ', center_stimulus_valve); 
         
         BpodSystem.Data.trialOrder.trialTypeOrder(trial) = BpodSystem.Status.currentTrialType; 
+        BpodSystem.Data.trialOrder.centerValveOrder_actual(trial) = center_stimulus_valve; 
         BpodSystem.Data.summary.correctPort(trial) = correct_port.PORT;
 
         %% Assemble the State Machine for this Trial
@@ -291,28 +293,28 @@ function day11_alternation2_6nonconsecutive_v3
         % ITI_gasDelay3: pause after gas
         sma = AddState(sma, 'Name', 'ITI_gasDelay3', ...
             'Timer', expV.GAS_DELAY, ...
-            'StateChangeConditions', {'Tup', 'ITI_stimPriming'}, ...
+            'StateChangeConditions', {'Tup', 'ITI_stimLoad'}, ...
             'OutputActions', {center_port.DOOR, expV.UP, expV.GAS_VALVE, 0});
-        % ITI_stimPriming: prime center spout with the next stimulus
-        sma = AddState(sma, 'Name', 'ITI_stimPriming', ...
-            'Timer', valvePrimingTime, ...
-            'StateChangeConditions', {'Tup', 'ITI_stimPrimingDelay'}, ...
-            'OutputActions', {center_port.DOOR, expV.UP, expV.GAS_VALVE, 0, 'ValveModule1', ['O' center_stimulus_valve]});
-        % ITI_stimPrimingDelay: close priming valve, allow stimulus to settle
-        sma = AddState(sma, 'Name', 'ITI_stimPrimingDelay', ...
-            'Timer', expV.PRIMING_DELAY,...
-            'StateChangeConditions', {'Tup', 'ITI_gasClear4'},...
-            'OutputActions',{center_port.DOOR, expV.UP, expV.GAS_VALVE, 0, 'ValveModule1', ['C' center_stimulus_valve]});
-        % ITI_gasClear4: clear priming slug with gas
-        sma = AddState(sma, 'Name', 'ITI_gasClear4', ...
-            'Timer', expV.GAS_TIME, ...
-            'StateChangeConditions', {'Tup', 'ITI_gasDelay4'}, ...
-            'OutputActions', {center_port.DOOR, expV.UP, expV.GAS_VALVE, 1});
-        % ITI_gasDelay4: pause after gas
-        sma = AddState(sma, 'Name', 'ITI_gasDelay4', ...
-            'Timer', expV.GAS_DELAY,...
-            'StateChangeConditions', {'Tup', 'ITI_stimLoad'},...
-            'OutputActions',{center_port.DOOR, expV.UP, expV.GAS_VALVE, 0});
+        % % ITI_stimPriming: prime center spout with the next stimulus
+        % sma = AddState(sma, 'Name', 'ITI_stimPriming', ...
+        %     'Timer', valvePrimingTime, ...
+        %     'StateChangeConditions', {'Tup', 'ITI_stimPrimingDelay'}, ...
+        %     'OutputActions', {center_port.DOOR, expV.UP, expV.GAS_VALVE, 0, 'ValveModule1', ['O' center_stimulus_valve]});
+        % % ITI_stimPrimingDelay: close priming valve, allow stimulus to settle
+        % sma = AddState(sma, 'Name', 'ITI_stimPrimingDelay', ...
+        %     'Timer', expV.PRIMING_DELAY,...
+        %     'StateChangeConditions', {'Tup', 'ITI_gasClear4'},...
+        %     'OutputActions',{center_port.DOOR, expV.UP, expV.GAS_VALVE, 0, 'ValveModule1', ['C' center_stimulus_valve]});
+        % % ITI_gasClear4: clear priming slug with gas
+        % sma = AddState(sma, 'Name', 'ITI_gasClear4', ...
+        %     'Timer', expV.GAS_TIME, ...
+        %     'StateChangeConditions', {'Tup', 'ITI_gasDelay4'}, ...
+        %     'OutputActions', {center_port.DOOR, expV.UP, expV.GAS_VALVE, 1});
+        % % ITI_gasDelay4: pause after gas
+        % sma = AddState(sma, 'Name', 'ITI_gasDelay4', ...
+        %     'Timer', expV.GAS_DELAY,...
+        %     'StateChangeConditions', {'Tup', 'ITI_stimLoad'},...
+        %     'OutputActions',{center_port.DOOR, expV.UP, expV.GAS_VALVE, 0});
         % ITI_stimLoad: final stimulus loading in the center spout
         sma = AddState(sma, 'Name', 'ITI_stimLoad', ...
             'Timer', valveLoadingTime, ...
@@ -538,6 +540,7 @@ function day11_alternation2_6nonconsecutive_v3
         BpodSystem.Data.trialOrder.trialTypeOrder = nan(expV.MAXIMUM_TRIALS, 1);
         BpodSystem.Data.trialOrder.centerValveOrder_stim1 = center_stim1_valve_order;
         BpodSystem.Data.trialOrder.centerValveOrder_stim2 = center_stim2_valve_order;
+        BpodSystem.Data.trialOrder.centerValveOrder_actual = nan(expV.MAXIMUM_TRIALS, 1); 
 
         % save valve stimulus assignment config (should contain stim id)
         BpodSystem.Data.valveStimulusAssignments = valveConfig.config; 
@@ -560,7 +563,7 @@ function day11_alternation2_6nonconsecutive_v3
         
         % Save calibrated valve times for stimulus drivers
         BpodSystem.Data.valveTimings.valveStimTimes = table(valveID, valveStimTimes); % time in seconds
-        BpodSystem.Data.valveTimings.valvePrimingTime = valvePrimingTime;
+        %BpodSystem.Data.valveTimings.valvePrimingTime = valvePrimingTime;
         BpodSystem.Data.valveTimings.valveLoadingTime = valveLoadingTime;
         BpodSystem.Data.valveTimings.valveRinseTime = valveRinseTime;
     end

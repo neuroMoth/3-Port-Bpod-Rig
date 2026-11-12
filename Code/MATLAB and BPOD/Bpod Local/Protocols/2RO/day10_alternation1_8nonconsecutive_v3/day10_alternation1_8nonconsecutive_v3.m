@@ -223,8 +223,10 @@ function day10_alternation1_8nonconsecutive_v3
             BpodSystem.Status.switchStimulusFlag = false; % reset the flag
             BpodSystem.Status.numberNonconsecutiveCorrect = 0; 
         end
+        fprintf('Center=valve%d. ', center_stimulus_valve); 
         
         BpodSystem.Data.trialOrder.trialTypeOrder(trial) = BpodSystem.Status.currentTrialType; 
+        BpodSystem.Data.trialOrder.centerValveOrder_actual(trial) = center_stimulus_valve; 
         BpodSystem.Data.summary.correctPort(trial) = correct_port.PORT;
 
         %% Assemble the State Machine for this Trial
@@ -538,6 +540,7 @@ function day10_alternation1_8nonconsecutive_v3
         BpodSystem.Data.trialOrder.trialTypeOrder = nan(expV.MAXIMUM_TRIALS, 1);
         BpodSystem.Data.trialOrder.centerValveOrder_stim1 = center_stim1_valve_order;
         BpodSystem.Data.trialOrder.centerValveOrder_stim2 = center_stim2_valve_order;
+        BpodSystem.Data.trialOrder.centerValveOrder_actual = nan(expV.MAXIMUM_TRIALS, 1); 
 
         % save valve stimulus assignment config (should contain stim id)
         BpodSystem.Data.valveStimulusAssignments = valveConfig.config; 

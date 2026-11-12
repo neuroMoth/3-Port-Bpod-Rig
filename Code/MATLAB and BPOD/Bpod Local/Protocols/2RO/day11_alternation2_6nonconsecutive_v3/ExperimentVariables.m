@@ -7,11 +7,11 @@ classdef ExperimentVariables
     properties (Constant)
         %% Session time variables (in seconds)
         TOTAL_ALLOWED_TIME = 3600;
-        ITI_TIME = 15;
+        ITI_TIME = 12;
         ITI_ENDTIME = 2; % portion of ITI for the end of the trial (subtracted from total ITI_TIME duration)
         PUNISHMENT_TIME = 15; % added to the ITI_TIME after incorrect or skipped trials
-        TTC_CENTER_TIME = 15;
-        TTC_LATERAL_TIME = 15;
+        TTC_CENTER_TIME = 10;
+        TTC_LATERAL_TIME = 10;
         LICK_WINDOW = 2; % time rat has to complete required amount of licks.
         DELAY_TIME = 3; % delay from closing the center door to opening the lateral door
         GAS_TIME = 0.3; % valve open time for gas clearing
@@ -24,9 +24,9 @@ classdef ExperimentVariables
 
         %% Volumes
         STIM_VOLUME = 5; % stimulus in ul delivered per lick (3 licks for center, 4 licks for lateral)
-        PRIMING_VOLUME = 100; % 1x dead space of the manifold (current estimate about 100ul). For "seasoning" step.
+        %PRIMING_VOLUME = 100; % 1x dead space of the manifold (current estimate about 100ul). For "seasoning" step.
         LOAD_VOLUME = 200; % 2x dead space of the manifold. Fills the manifold and pushes the first amount to waste.
-        RINSE_VOLUME = 600; % 600ul (0.6ml) for each rinse round (2 rounds with gas clearing in between).
+        RINSE_VOLUME = 400; % 600ul (0.6ml) for each rinse round (2 rounds with gas clearing in between).
 
         %% Valves
         LEFT_VALVE = 1; % left port valve

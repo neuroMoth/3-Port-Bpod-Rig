@@ -10,8 +10,8 @@ classdef ExperimentVariables
         ITI_TIME = 15;
         ITI_ENDTIME = 2; % portion of ITI for the end of the trial (subtracted from total ITI_TIME duration)
         PUNISHMENT_TIME = 15; % added to the ITI_TIME after incorrect or skipped trials
-        TTC_CENTER_TIME = 15;
-        TTC_LATERAL_TIME = 15;
+        TTC_CENTER_TIME = 10;
+        TTC_LATERAL_TIME = 10;
         LICK_WINDOW = 2; % time rat has to complete required amount of licks.
         DELAY_TIME = 3; % delay from closing the center door to opening the lateral door
         GAS_TIME = 0.3; % valve open time for gas clearing
